@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PawPals · Cari Hewan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">PawPals</span>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="about.html">Tentang</a></li>
+                    <li><a href="pets.html">Hewan</a></li>
+                    <li><a href="search.html" class="active">Cari</a></li>
+                    <li><a href="adopt.html" class="nav-cta">Adopsi</a></li>
+                </ul>
+                <button class="nav-toggle" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section style="padding: 40px 0 20px;">
+            <div class="container">
+                <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                    <h2>Cari <span class="highlight">Hewan</span></h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Temukan hewan impianmu berdasarkan nama, jenis, atau usia.</p>
+                    <div style="display: flex; gap: 12px; background: var(--white); padding: 8px 8px 8px 20px; border-radius: 60px; box-shadow: var(--shadow); border: 1px solid var(--beige);">
+                        <input type="text" id="searchInput" placeholder="Cari hewan..." style="flex: 1; border: none; outline: none; font-size: 1rem; padding: 10px 0; background: transparent; font-family: inherit;" />
+                        <button id="searchButton" class="btn btn-primary" style="padding: 10px 28px; border-radius: 40px;">Cari</button>
+                    </div>
+                    <div style="margin-top: 16px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" data-filter="all" style="padding: 6px 18px; font-size: 0.85rem;">Semua</button>
+                        <button class="btn btn-secondary" data-filter="anjing" style="padding: 6px 18px; font-size: 0.85rem;">🐕 Anjing</button>
+                        <button class="btn btn-secondary" data-filter="kucing" style="padding: 6px 18px; font-size: 0.85rem;">🐈 Kucing</button>
+                        <button class="btn btn-secondary" data-filter="kelinci" style="padding: 6px 18px; font-size: 0.85rem;">🐇 Kelinci</button>
+                        <button class="btn btn-secondary" data-filter="hamster" style="padding: 6px 18px; font-size: 0.85rem;">🐹 Hamster</button>
+                        <button class="btn btn-secondary" data-filter="burung" style="padding: 6px 18px; font-size: 0.85rem;">🐦 Burung</button>
+                    </div>
+                </div>
+                <div class="pets-grid" id="searchResults" style="margin-top: 40px;">
+                    <!-- akan diisi oleh JS -->
+                </div>
+                <div id="noResults" style="display: none; text-align: center; padding: 40px 0; color: var(--text-muted);">
+                    <span style="font-size: 3rem;">🔍</span>
+                    <p style="font-size: 1.2rem;">Tidak ada hewan yang ditemukan. Coba kata kunci lain.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">🐾</span>
+                        <span class="logo-text">PawPals</span>
+                    </div>
+                    <p>Menghubungkan hewan-hewan yang membutuhkan dengan orang-orang yang peduli.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter">🐦</a>
+                        <a href="#" aria-label="YouTube">▶️</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Jelajahi</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="about.html">Tentang</a></li>
+                        <li><a href="pets.html">Hewan</a></li>
+                        <li><a href="search.html">Cari</a></li>
+                        <li><a href="adopt.html">Adopsi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Bantuan</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="contact.html">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Tetap Terhubung</h4>
+                    <p>Dapatkan update hewan-hewan terbaru yang membutuhkan rumah.</p>
+                    <form id="newsletterForm">
+                        <input type="email" placeholder="Alamat email" required />
+                        <button type="submit" class="btn btn-primary">Berlangganan</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 PawPals. Dibuat dengan ❤️ untuk para pecinta hewan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

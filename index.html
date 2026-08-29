@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PawPals · Beranda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">PawPals</span>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Beranda</a></li>
+                    <li><a href="about.html">Tentang</a></li>
+                    <li><a href="pets.html">Hewan</a></li>
+                    <li><a href="search.html">Cari</a></li>
+                    <li><a href="adopt.html" class="nav-cta">Adopsi</a></li>
+                </ul>
+                <button class="nav-toggle" aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <span class="hero-badge">🐶 Temukan sahabat sejati</span>
+                    <h1>Setiap ekor <br />layak <span class="highlight">dicintai</span></h1>
+                    <p>PawPals menghubungkan hewan-hewan yang membutuhkan rumah dengan orang-orang penuh kasih. Mulai petualangan adopsimu hari ini.</p>
+                    <div class="hero-actions">
+                        <a href="pets.html" class="btn btn-primary">Lihat Hewan</a>
+                        <a href="about.html" class="btn btn-secondary">Pelajari</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div><span>150+</span> Hewan diadopsi</div>
+                        <div><span>45</span> Hewan tersedia</div>
+                        <div><span>98%</span> Kebahagiaan</div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <span>🐕</span>
+                        <span>🐈</span>
+                        <span>🐇</span>
+                        <span>🐹</span>
+                        <span>🐦</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Hewan <span class="highlight">Tersedia</span></h2>
+                    <p>Temukan teman berbulu yang menunggu untuk membawa kebahagiaan ke rumahmu</p>
+                </div>
+                <div class="pets-grid" id="featuredGrid">
+                    <!-- diisi oleh JS -->
+                </div>
+                <div class="section-footer">
+                    <a href="pets.html" class="btn btn-primary">Lihat Semua Hewan →</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Cerita <span class="highlight">Bahagia</span></h2>
+                    <p>Dengar langsung dari mereka yang telah menemukan sahabat melalui PawPals</p>
+                </div>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Mengadopsi Milo adalah keputusan terbaik kami. PawPals membuat prosesnya begitu mudah dan menyenangkan!"</p>
+                        <div class="testimonial-author">
+                            <span class="author-avatar">👩</span>
+                            <div><strong>Sarah</strong><span>Mengadopsi Milo 🐕</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Luna langsung menjadi bagian dari keluarga kami. Terima kasih PawPals telah mempertemukan kami!"</p>
+                        <div class="testimonial-author">
+                            <span class="author-avatar">👨</span>
+                            <div><strong>Andi</strong><span>Mengadopsi Luna 🐈</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Proses adopsi sangat transparan dan tim PawPals sangat membantu. Kami sangat merekomendasikan!"</p>
+                        <div class="testimonial-author">
+                            <span class="author-avatar">👩</span>
+                            <div><strong>Dewi</strong><span>Mengadopsi Coco 🐇</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container cta-box">
+                <h2>Siap memberi <span class="highlight">rumah</span> baru?</h2>
+                <p>Setiap hewan layak mendapatkan keluarga yang penuh cinta. Mulai proses adopsimu sekarang.</p>
+                <a href="adopt.html" class="btn btn-primary">Mulai Adopsi →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">🐾</span>
+                        <span class="logo-text">PawPals</span>
+                    </div>
+                    <p>Menghubungkan hewan-hewan yang membutuhkan dengan orang-orang yang peduli.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter">🐦</a>
+                        <a href="#" aria-label="YouTube">▶️</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Jelajahi</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="about.html">Tentang</a></li>
+                        <li><a href="pets.html">Hewan</a></li>
+                        <li><a href="search.html">Cari</a></li>
+                        <li><a href="adopt.html">Adopsi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Bantuan</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="contact.html">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Tetap Terhubung</h4>
+                    <p>Dapatkan update hewan-hewan terbaru yang membutuhkan rumah.</p>
+                    <form id="newsletterForm">
+                        <input type="email" placeholder="Alamat email" required />
+                        <button type="submit" class="btn btn-primary">Berlangganan</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 PawPals. Dibuat dengan ❤️ untuk para pecinta hewan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
