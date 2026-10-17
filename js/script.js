@@ -13,6 +13,83 @@ const pets = [
 ];
 
 // ==========================================
+// NIGHT MODE
+// ==========================================
+const THEME_KEY = 'pawpals-theme';
+
+function getSavedTheme() {
+    try {
+        const saved = localStorage.getItem(THEME_KEY);
+        return (saved === 'dark' || saved === 'light') ? saved : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveTheme(theme) {
+    try {
+        localStorage.setItem(THEME_KEY, theme);
+    } catch (e) { /* localStorage diblokir, abaikan */ }
+}
+
+function getPreferredTheme() {
+    const saved = getSavedTheme();
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+    const isDark = theme === 'dark';
+
+    // Atribut pada <html> = pemicu seluruh override CSS
+    if (isDark) {
+        root.setAttribute('data-theme', 'dark');
+    } else {
+        root.removeAttribute('data-theme');
+    }
+    root.style.colorScheme = theme;
+
+    // Sinkronkan label/aria tombol di semua halaman
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+        btn.setAttribute('aria-pressed', String(isDark));
+        btn.setAttribute('aria-label', isDark ? 'Aktifkan Light Mode' : 'Aktifkan Night Mode');
+        btn.title = isDark ? 'Light Mode' : 'Night Mode';
+    });
+}
+
+function toggleTheme() {
+    const root = document.documentElement;
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+
+    // Efek transisi halus pada semua elemen selama pergantian tema
+    root.classList.add('theme-transition');
+    setTimeout(() => root.classList.remove('theme-transition'), 400);
+
+    applyTheme(next);
+    saveTheme(next);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    applyTheme(getPreferredTheme());
+
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+        btn.addEventListener('click', toggleTheme);
+    });
+
+    // Ikuti perubahan pengaturan sistem selama user belum memilih manual
+    const systemPref = window.matchMedia('(prefers-color-scheme: dark)');
+    const onSystemChange = e => {
+        if (!getSavedTheme()) applyTheme(e.matches ? 'dark' : 'light');
+    };
+    if (systemPref.addEventListener) {
+        systemPref.addEventListener('change', onSystemChange);
+    } else if (systemPref.addListener) {
+        systemPref.addListener(onSystemChange);
+    }
+});
+
+// ==========================================
 // RENDER HEWAN (grid biasa)
 // ==========================================
 function renderPets(petList, containerId) {

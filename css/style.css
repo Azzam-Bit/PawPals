@@ -31,6 +31,21 @@
     --radius: 20px;
     --radius-sm: 12px;
     --transition: 0.3s ease;
+
+    /* aksen & komponen yang di-override pada night mode */
+    --highlight: #c28a7a;
+    --cocoa-strong: #6f594b;
+    --nav-cta-hover: #f5c8c4;
+    --toast-bg: rgba(255, 255, 255, 0.92);
+
+    /* footer */
+    --footer-bg: #3d2e26;
+    --footer-text: #f0e8e0;
+    --footer-muted: #ccc0b8;
+    --footer-dim: #a68f7e;
+    --footer-line: #4d3b31;
+    --footer-input: #4d3b31;
+    --footer-input-focus: #5f4a3d;
 }
 
 body {
@@ -86,9 +101,21 @@ textarea,
 }
 
 .highlight {
-    color: #c28a7a;
+    color: var(--highlight);
     /* aksen peach-coklat lembut */
     font-weight: 700;
+}
+
+/* Input & textarea mengikuti warna teks tema */
+input,
+textarea,
+select {
+    color: var(--text-dark);
+}
+
+::placeholder {
+    color: var(--text-muted);
+    opacity: 0.75;
 }
 
 /* ---------- CONTAINER ---------- */
@@ -176,7 +203,7 @@ header {
 }
 
 .nav-cta:hover {
-    background: #f5c8c4;
+    background: var(--nav-cta-hover);
     transform: scale(1.02);
 }
 
@@ -221,7 +248,7 @@ header {
 }
 
 .btn-primary:hover {
-    background: #6f594b;
+    background: var(--cocoa-strong);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(139, 111, 92, 0.3);
 }
@@ -514,18 +541,18 @@ header {
 
 /* ---------- FOOTER ---------- */
 footer {
-    background: var(--text-dark);
-    color: #f0e8e0;
+    background: var(--footer-bg);
+    color: var(--footer-text);
     padding: 48px 0 20px;
     margin-top: 20px;
 }
 
 footer .logo-text {
-    color: var(--white);
+    color: var(--footer-text);
 }
 
 footer .logo-icon {
-    color: var(--white);
+    color: var(--footer-text);
 }
 
 .footer-grid {
@@ -537,7 +564,7 @@ footer .logo-icon {
 
 .footer-brand p {
     font-size: 0.95rem;
-    color: #ccc0b8;
+    color: var(--footer-muted);
     max-width: 280px;
     margin: 12px 0 16px;
 }
@@ -549,19 +576,19 @@ footer .logo-icon {
 }
 
 .footer-social a {
-    color: #ccc0b8;
+    color: var(--footer-muted);
     text-decoration: none;
     transition: color var(--transition);
 }
 
 .footer-social a:hover {
-    color: var(--white);
+    color: var(--footer-text);
 }
 
 .footer-links h4 {
     font-weight: 600;
     font-size: 1.05rem;
-    color: var(--white);
+    color: var(--footer-text);
     margin-bottom: 16px;
 }
 
@@ -574,18 +601,18 @@ footer .logo-icon {
 }
 
 .footer-links ul a {
-    color: #ccc0b8;
+    color: var(--footer-muted);
     text-decoration: none;
     font-size: 0.95rem;
     transition: color var(--transition);
 }
 
 .footer-links ul a:hover {
-    color: var(--white);
+    color: var(--footer-text);
 }
 
 .footer-newsletter p {
-    color: #ccc0b8;
+    color: var(--footer-muted);
     font-size: 0.95rem;
     margin-bottom: 16px;
 }
@@ -601,19 +628,19 @@ footer .logo-icon {
     padding: 10px 16px;
     border-radius: 40px;
     border: none;
-    background: #4d3b31;
-    color: var(--white);
+    background: var(--footer-input);
+    color: var(--footer-text);
     font-size: 0.95rem;
     outline: none;
     transition: background var(--transition);
 }
 
 .footer-newsletter input[type="email"]::placeholder {
-    color: #a68f7e;
+    color: var(--footer-dim);
 }
 
 .footer-newsletter input[type="email"]:focus {
-    background: #5f4a3d;
+    background: var(--footer-input-focus);
 }
 
 .footer-newsletter .btn {
@@ -625,15 +652,15 @@ footer .logo-icon {
 }
 
 .footer-newsletter .btn:hover {
-    background: #f5c8c4;
+    background: var(--nav-cta-hover);
 }
 
 .footer-bottom {
-    border-top: 1px solid #4d3b31;
+    border-top: 1px solid var(--footer-line);
     padding-top: 24px;
     text-align: center;
     font-size: 0.9rem;
-    color: #a68f7e;
+    color: var(--footer-dim);
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -788,7 +815,6 @@ footer .logo-icon {
 }
 
 .toast {
-    background: var(--white);
     padding: 18px 22px;
     border-radius: var(--radius);
     box-shadow: 0 12px 40px rgba(0,0,0,0.12);
@@ -799,7 +825,7 @@ footer .logo-icon {
     animation: slideUp 0.4s ease forwards;
     transform-origin: bottom right;
     backdrop-filter: blur(4px);
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--toast-bg);
 }
 
 .toast.success {
@@ -871,5 +897,168 @@ footer .logo-icon {
     }
     .toast {
         padding: 14px 16px;
+    }
+}
+
+/* ============================================
+   NIGHT MODE
+   1. Wrapper logo + tombol tema di header
+   2. Tombol aksi Night Mode
+   3. Palet & komponen dark theme
+   ============================================ */
+
+/* ---------- 1. HEADER-LEFT ---------- */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* ---------- 2. TOMBOL NIGHT MODE ---------- */
+.theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--beige);
+    border: 1px solid var(--warm-gray);
+    color: var(--text-dark);
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: background var(--transition), transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.theme-toggle:hover {
+    background: var(--soft-peach);
+    border-color: var(--cocoa-light);
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:active {
+    transform: scale(0.94);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--cocoa);
+    outline-offset: 3px;
+}
+
+/* Ikon Matahari & Bulan bertumpuk, ditumpuki absolute lalu di-fade */
+.theme-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 19px;
+    height: 19px;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+
+.theme-icon-moon {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-70deg) scale(0.4);
+}
+
+[data-theme="dark"] .theme-icon-sun {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(70deg) scale(0.4);
+}
+
+[data-theme="dark"] .theme-icon-moon {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+}
+
+/* ---------- 3. DARK THEME ---------- */
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* palet gelap (tetap hangat, mengikuti nuansa "creamy" PawPals) */
+    --cream: #14100d;
+    --cream-light: #1a1512;
+    --white: #241d18;
+    --beige: #2b221c;
+    --warm-gray: #3d3129;
+    --soft-peach: #4a3630;
+    --soft-mint: #24352f;
+    --soft-lavender: #2e2739;
+
+    --cocoa: #dcbfa6;
+    --cocoa-light: #b59a84;
+    --cocoa-strong: #f4e3d1;
+
+    --text-dark: #f3ebe3;
+    --text-muted: #c4b1a3;
+
+    --highlight: #eda98f;
+    --nav-cta-hover: #5c4239;
+    --toast-bg: rgba(45, 36, 30, 0.95);
+
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.65);
+
+    /* footer tetap paling gelap agar hierarki tetap terjaga */
+    --footer-bg: #120e0c;
+    --footer-text: #efe5dc;
+    --footer-muted: #b3a196;
+    --footer-dim: #8c7a6e;
+    --footer-line: #2b221c;
+    --footer-input: #241d18;
+    --footer-input-focus: #2f2621;
+}
+
+/* Hero sedikit lebih gelap agar tidak menyilaukan */
+[data-theme="dark"] .hero {
+    background: linear-gradient(135deg, var(--cream-light) 0%, var(--beige) 100%);
+}
+
+/* Scrollbar senada tema */
+[data-theme="dark"] {
+    scrollbar-color: var(--warm-gray) var(--cream-light);
+}
+
+/* Transisi halus saat tema berganti (class sementara dari JS) */
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+    transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, fill 0.35s ease !important;
+}
+
+/* Hormati preferensi pengguna yang mengurangi animasi */
+@media (prefers-reduced-motion: reduce) {
+    .theme-icon,
+    .theme-toggle,
+    html.theme-transition * {
+        transition: none !important;
+    }
+}
+
+/* ---------- 4. PENYESUAIAN LAYAR KECIL ---------- */
+/* Jaga agar logo + tombol tema tidak bertabrakan dengan hamburger */
+@media (max-width: 480px) {
+    .header-left {
+        gap: 10px;
+    }
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+    }
+    .theme-icon {
+        width: 17px;
+        height: 17px;
+    }
+    .logo-text {
+        font-size: 1.35rem;
+    }
+    .logo-icon {
+        font-size: 1.5rem;
     }
 }
