@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PawPals · Adopsi</title>
+    <meta name="description" content="Formulir adopsi PawPals. Pilih hewan yang diinginkan dan isi data diri Anda. Catatan: situs ini masih mode demo, data divalidasi di browser tanpa dikirim ke server." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -45,14 +46,14 @@
                 </button>
             </div>
             <nav>
-                <ul class="nav-links">
+                <ul class="nav-links" id="navLinks">
                     <li><a href="index.html">Beranda</a></li>
                     <li><a href="about.html">Tentang</a></li>
                     <li><a href="pets.html">Hewan</a></li>
                     <li><a href="search.html">Cari</a></li>
                     <li><a href="adopt.html" class="active nav-cta">Adopsi</a></li>
                 </ul>
-                <button class="nav-toggle" aria-label="Toggle navigation">
+                <button class="nav-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="navLinks">
                     <span></span><span></span><span></span>
                 </button>
             </nav>
@@ -60,52 +61,82 @@
     </header>
 
     <main>
-        <section style="padding: 40px 0 60px;">
+        <section class="page-pad">
             <div class="container">
-                <div style="max-width: 720px; margin: 0 auto;">
+                <div class="form-narrow">
                     <div class="section-header">
-                        <h2>Formulir <span class="highlight">Adopsi</span></h2>
+                        <h1>Formulir <span class="highlight">Adopsi</span></h1>
                         <p>Isi data diri Anda dengan benar agar kami dapat memproses permohonan adopsi.</p>
                     </div>
-                    <form id="adoptForm" style="background: var(--white); padding: 32px 30px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--beige);">
+
+                    <!-- Jujur soal status proyek: belum ada backend -->
+                    <p class="demo-notice">
+                        <span aria-hidden="true">&#9432;&#65039;</span>
+                        <span><strong>Mode demo.</strong> PawPals saat ini berjalan sepenuhnya di browser &mdash; belum ada server yang menerima atau menyimpan data. Formulir ini hanya <strong>memvalidasi isian di perangkat Anda</strong> dan tidak mengirim data ke mana pun.</span>
+                    </p>
+
+                    <form id="adoptForm" class="form-card" novalidate>
                         <!-- Nama -->
-                        <div style="margin-bottom: 20px;">
-                            <label for="fullname" style="display: block; font-weight: 600; font-family: 'Poppins', sans-serif; margin-bottom: 6px;">Nama Lengkap</label>
-                            <input type="text" id="fullname" placeholder="Contoh: Andi Wijaya" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--warm-gray); border-radius: var(--radius-sm); font-size: 1rem; background: var(--cream-light);" />
+                        <div class="form-field">
+                            <label for="fullname" class="form-label">Nama Lengkap <span class="form-required" aria-hidden="true">*</span></label>
+                            <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Contoh: Andi Wijaya" autocomplete="name" required aria-required="true" aria-describedby="fullname-error" />
+                            <p class="form-error" id="fullname-error" hidden></p>
                         </div>
+
                         <!-- Email -->
-                        <div style="margin-bottom: 20px;">
-                            <label for="email" style="display: block; font-weight: 600; font-family: 'Poppins', sans-serif; margin-bottom: 6px;">Alamat Email</label>
-                            <input type="email" id="email" placeholder="email@example.com" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--warm-gray); border-radius: var(--radius-sm); font-size: 1rem; background: var(--cream-light);" />
+                        <div class="form-field">
+                            <label for="email" class="form-label">Alamat Email <span class="form-required" aria-hidden="true">*</span></label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="email@example.com" autocomplete="email" inputmode="email" required aria-required="true" aria-describedby="email-error" />
+                            <p class="form-error" id="email-error" hidden></p>
                         </div>
+
                         <!-- Telepon -->
-                        <div style="margin-bottom: 20px;">
-                            <label for="phone" style="display: block; font-weight: 600; font-family: 'Poppins', sans-serif; margin-bottom: 6px;">Nomor Telepon</label>
-                            <input type="tel" id="phone" placeholder="0812-3456-7890" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--warm-gray); border-radius: var(--radius-sm); font-size: 1rem; background: var(--cream-light);" />
+                        <div class="form-field">
+                            <label for="phone" class="form-label">Nomor Telepon <span class="form-required" aria-hidden="true">*</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="0812-3456-7890" autocomplete="tel" inputmode="tel" required aria-required="true" aria-describedby="phone-help phone-error" />
+                            <p class="form-hint" id="phone-help">Format bebas, boleh nomor lokal maupun internasional, contoh +62 812 3456 7890.</p>
+                            <p class="form-error" id="phone-error" hidden></p>
                         </div>
-                    
-                        <!-- ===== PILIHAN HEWAN (kartu) ===== -->
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; font-weight: 600; font-family: 'Poppins', sans-serif; margin-bottom: 10px;">
-                                🐾 Pilih Hewan yang Diinginkan
-                            </label>
-                            <div id="petSelection" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px;">
-                                <!-- akan diisi oleh JS -->
+
+                        <!-- ===== PILIHAN HEWAN (fieldset + radio semantik) ===== -->
+                        <fieldset class="form-field pet-picker" aria-describedby="petSelectionFeedback petChoice-error">
+                            <legend class="form-label">&#128062; Pilih Hewan yang Diinginkan <span class="form-required" aria-hidden="true">*</span></legend>
+                            <div class="pet-picker-grid" id="petSelection">
+                                <!-- diisi js/script.js sebagai input[radio] + label kartu -->
                             </div>
-                            <input type="hidden" id="selectedPet" value="" />
-                            <p id="petSelectionFeedback" style="margin-top: 8px; font-size: 0.9rem; color: var(--text-muted);"></p>
+                            <p class="form-hint" id="petSelectionFeedback" role="status"></p>
+                            <p class="form-error" id="petChoice-error" hidden></p>
+                        </fieldset>
+
+                        <!-- ===== INPUT TAMBAHAN (hanya saat opsi "Lainnya" dipilih) ===== -->
+                        <div class="form-field other-fields" id="otherPetFields" hidden>
+                            <p class="other-fields-title">Detail hewan pilihan Anda</p>
+
+                            <div class="form-field">
+                                <label for="otherPetName" class="form-label">Nama atau ciri hewan <span class="form-required" aria-hidden="true">*</span></label>
+                                <input type="text" id="otherPetName" name="otherPetName" class="form-control" placeholder="Contoh: Kucing Persia" aria-describedby="otherPetName-error" />
+                                <p class="form-error" id="otherPetName-error" hidden></p>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="otherPetType" class="form-label">Jenis atau ras <span class="form-optional">(opsional)</span></label>
+                                <input type="text" id="otherPetType" name="otherPetType" class="form-control" placeholder="Contoh: Persia" aria-describedby="otherPetType-error" />
+                                <p class="form-error" id="otherPetType-error" hidden></p>
+                            </div>
                         </div>
-                    
+
                         <!-- Pesan tambahan -->
-                        <div style="margin-bottom: 20px;">
-                            <label for="message" style="display: block; font-weight: 600; font-family: 'Poppins', sans-serif; margin-bottom: 6px;">Pesan Tambahan</label>
-                            <textarea id="message" rows="4" placeholder="Ceritakan tentang rumah dan keluarga Anda..." style="width: 100%; padding: 12px 16px; border: 1px solid var(--warm-gray); border-radius: var(--radius-sm); font-size: 1rem; background: var(--cream-light); resize: vertical;"></textarea>
+                        <div class="form-field">
+                            <label for="message" class="form-label">Pesan Tambahan <span class="form-optional">(opsional)</span></label>
+                            <textarea id="message" name="message" class="form-control" rows="4" placeholder="Ceritakan tentang rumah dan keluarga Anda..."></textarea>
                         </div>
-                    
-                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-                            <button type="submit" class="btn btn-primary" style="flex: 1;">Kirim Permohonan</button>
-                            <button type="reset" class="btn btn-secondary" style="flex: 0.5;">Reset</button>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="adoptSubmit">Validasi Permohonan</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
                         </div>
+
+                        <p class="form-status" id="adoptStatus" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
@@ -122,14 +153,14 @@
                     </div>
                     <p>Menghubungkan hewan-hewan yang membutuhkan dengan orang-orang yang peduli.</p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="YouTube">▶️</a>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">📷</span><span class="visually-hidden">Instagram (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">📘</span><span class="visually-hidden">Facebook (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">🐦</span><span class="visually-hidden">Twitter (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">▶️</span><span class="visually-hidden">YouTube (segera hadir)</span></span>
                     </div>
                 </div>
                 <div class="footer-links">
-                    <h4>Jelajahi</h4>
+                    <h2>Jelajahi</h2>
                     <ul>
                         <li><a href="index.html">Beranda</a></li>
                         <li><a href="about.html">Tentang</a></li>
@@ -139,21 +170,24 @@
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4>Bantuan</h4>
+                    <h2>Bantuan</h2>
                     <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Syarat & Ketentuan</a></li>
-                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">FAQ<span class="visually-hidden"> (segera hadir)</span></span></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">Syarat &amp; Ketentuan<span class="visually-hidden"> (segera hadir)</span></span></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">Kebijakan Privasi<span class="visually-hidden"> (segera hadir)</span></span></li>
                         <li><a href="contact.html">Hubungi Kami</a></li>
                     </ul>
                 </div>
                 <div class="footer-newsletter">
-                    <h4>Tetap Terhubung</h4>
+                    <h2>Tetap Terhubung</h2>
                     <p>Dapatkan update hewan-hewan terbaru yang membutuhkan rumah.</p>
-                    <form id="newsletterForm">
-                        <input type="email" placeholder="Alamat email" required />
+                    <p class="footer-demo-note">Mode demo: belum ada layanan berlangganan, jadi alamat email tidak dikirim dan tidak disimpan.</p>
+                    <form id="newsletterForm" novalidate>
+                        <label for="newsletterEmail" class="visually-hidden">Alamat email</label>
+                        <input type="email" id="newsletterEmail" name="newsletterEmail" placeholder="Alamat email" autocomplete="email" required aria-required="true" aria-describedby="newsletterStatus" />
                         <button type="submit" class="btn btn-primary">Berlangganan</button>
                     </form>
+                    <p class="footer-form-status" id="newsletterStatus" role="status" aria-live="polite"></p>
                 </div>
             </div>
             <div class="footer-bottom">

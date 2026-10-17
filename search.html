@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PawPals · Cari Hewan</title>
+    <meta name="description" content="Cari hewan yang ingin kamu adopsi berdasarkan nama, jenis, atau usia, lengkap dengan filter cepat anjing, kucing, kelinci, hamster, dan burung." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -45,14 +46,14 @@
                 </button>
             </div>
             <nav>
-                <ul class="nav-links">
+                <ul class="nav-links" id="navLinks">
                     <li><a href="index.html">Beranda</a></li>
                     <li><a href="about.html">Tentang</a></li>
                     <li><a href="pets.html">Hewan</a></li>
                     <li><a href="search.html" class="active">Cari</a></li>
                     <li><a href="adopt.html" class="nav-cta">Adopsi</a></li>
                 </ul>
-                <button class="nav-toggle" aria-label="Toggle navigation">
+                <button class="nav-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="navLinks">
                     <span></span><span></span><span></span>
                 </button>
             </nav>
@@ -60,30 +61,32 @@
     </header>
 
     <main>
-        <section style="padding: 40px 0 20px;">
+        <section class="page-pad-sm">
             <div class="container">
                 <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                    <h2>Cari <span class="highlight">Hewan</span></h2>
+                    <h1>Cari <span class="highlight">Hewan</span></h1>
                     <p style="color: var(--text-muted); margin-bottom: 20px;">Temukan hewan impianmu berdasarkan nama, jenis, atau usia.</p>
-                    <div style="display: flex; gap: 12px; background: var(--white); padding: 8px 8px 8px 20px; border-radius: 60px; box-shadow: var(--shadow); border: 1px solid var(--beige);">
-                        <input type="text" id="searchInput" placeholder="Cari hewan..." style="flex: 1; border: none; outline: none; font-size: 1rem; padding: 10px 0; background: transparent; font-family: inherit;" />
-                        <button id="searchButton" class="btn btn-primary" style="padding: 10px 28px; border-radius: 40px;">Cari</button>
+                    <form id="searchForm" class="search-bar" role="search">
+                        <label for="searchInput" class="visually-hidden">Kata kunci pencarian hewan</label>
+                        <input type="search" id="searchInput" name="q" placeholder="Cari hewan..." autocomplete="off" />
+                        <button type="submit" id="searchButton" class="btn btn-primary">Cari</button>
+                    </form>
+                    <div class="search-filters" role="group" aria-label="Saring menurut jenis hewan">
+                        <button type="button" class="btn btn-secondary" data-filter="all">Semua</button>
+                        <button type="button" class="btn btn-secondary" data-filter="anjing"><span aria-hidden="true">&#128054;</span> Anjing</button>
+                        <button type="button" class="btn btn-secondary" data-filter="kucing"><span aria-hidden="true">&#128568;</span> Kucing</button>
+                        <button type="button" class="btn btn-secondary" data-filter="kelinci"><span aria-hidden="true">&#128047;</span> Kelinci</button>
+                        <button type="button" class="btn btn-secondary" data-filter="hamster"><span aria-hidden="true">&#128049;</span> Hamster</button>
+                        <button type="button" class="btn btn-secondary" data-filter="burung"><span aria-hidden="true">&#128038;</span> Burung</button>
                     </div>
-                    <div style="margin-top: 16px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-                        <button class="btn btn-secondary" data-filter="all" style="padding: 6px 18px; font-size: 0.85rem;">Semua</button>
-                        <button class="btn btn-secondary" data-filter="anjing" style="padding: 6px 18px; font-size: 0.85rem;">🐕 Anjing</button>
-                        <button class="btn btn-secondary" data-filter="kucing" style="padding: 6px 18px; font-size: 0.85rem;">🐈 Kucing</button>
-                        <button class="btn btn-secondary" data-filter="kelinci" style="padding: 6px 18px; font-size: 0.85rem;">🐇 Kelinci</button>
-                        <button class="btn btn-secondary" data-filter="hamster" style="padding: 6px 18px; font-size: 0.85rem;">🐹 Hamster</button>
-                        <button class="btn btn-secondary" data-filter="burung" style="padding: 6px 18px; font-size: 0.85rem;">🐦 Burung</button>
-                    </div>
+                    <p class="form-hint" id="searchSummary" role="status" aria-live="polite"></p>
                 </div>
-                <div class="pets-grid" id="searchResults" style="margin-top: 40px;">
-                    <!-- akan diisi oleh JS -->
+                <div class="pets-grid" id="searchResults">
+                    <!-- diisi oleh js/script.js -->
                 </div>
-                <div id="noResults" style="display: none; text-align: center; padding: 40px 0; color: var(--text-muted);">
-                    <span style="font-size: 3rem;">🔍</span>
-                    <p style="font-size: 1.2rem;">Tidak ada hewan yang ditemukan. Coba kata kunci lain.</p>
+                <div id="noResults" class="no-results" hidden>
+                    <span aria-hidden="true">&#128269;</span>
+                    <p>Tidak ada hewan yang ditemukan. Coba kata kunci lain.</p>
                 </div>
             </div>
         </section>
@@ -99,14 +102,14 @@
                     </div>
                     <p>Menghubungkan hewan-hewan yang membutuhkan dengan orang-orang yang peduli.</p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="YouTube">▶️</a>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">📷</span><span class="visually-hidden">Instagram (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">📘</span><span class="visually-hidden">Facebook (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">🐦</span><span class="visually-hidden">Twitter (segera hadir)</span></span>
+                        <span class="footer-link-pending" title="Segera hadir"><span aria-hidden="true">▶️</span><span class="visually-hidden">YouTube (segera hadir)</span></span>
                     </div>
                 </div>
                 <div class="footer-links">
-                    <h4>Jelajahi</h4>
+                    <h2>Jelajahi</h2>
                     <ul>
                         <li><a href="index.html">Beranda</a></li>
                         <li><a href="about.html">Tentang</a></li>
@@ -116,21 +119,24 @@
                     </ul>
                 </div>
                 <div class="footer-links">
-                    <h4>Bantuan</h4>
+                    <h2>Bantuan</h2>
                     <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Syarat & Ketentuan</a></li>
-                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">FAQ<span class="visually-hidden"> (segera hadir)</span></span></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">Syarat &amp; Ketentuan<span class="visually-hidden"> (segera hadir)</span></span></li>
+                        <li><span class="footer-link-pending" title="Segera hadir">Kebijakan Privasi<span class="visually-hidden"> (segera hadir)</span></span></li>
                         <li><a href="contact.html">Hubungi Kami</a></li>
                     </ul>
                 </div>
                 <div class="footer-newsletter">
-                    <h4>Tetap Terhubung</h4>
+                    <h2>Tetap Terhubung</h2>
                     <p>Dapatkan update hewan-hewan terbaru yang membutuhkan rumah.</p>
-                    <form id="newsletterForm">
-                        <input type="email" placeholder="Alamat email" required />
+                    <p class="footer-demo-note">Mode demo: belum ada layanan berlangganan, jadi alamat email tidak dikirim dan tidak disimpan.</p>
+                    <form id="newsletterForm" novalidate>
+                        <label for="newsletterEmail" class="visually-hidden">Alamat email</label>
+                        <input type="email" id="newsletterEmail" name="newsletterEmail" placeholder="Alamat email" autocomplete="email" required aria-required="true" aria-describedby="newsletterStatus" />
                         <button type="submit" class="btn btn-primary">Berlangganan</button>
                     </form>
+                    <p class="footer-form-status" id="newsletterStatus" role="status" aria-live="polite"></p>
                 </div>
             </div>
             <div class="footer-bottom">

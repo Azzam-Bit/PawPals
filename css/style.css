@@ -46,6 +46,13 @@
     --footer-line: #4d3b31;
     --footer-input: #4d3b31;
     --footer-input-focus: #5f4a3d;
+
+    /* state validasi (error / success) */
+    --danger: #c2543f;
+    --danger-soft: rgba(194, 84, 63, 0.12);
+    --success: #4f8f68;
+    --success-soft: rgba(79, 143, 104, 0.12);
+    --focus-ring: rgba(139, 111, 92, 0.35);
 }
 
 body {
@@ -66,7 +73,8 @@ h4,
 .hero-badge,
 .section-header h2,
 .testimonial-author strong,
-.footer-links h4,
+.footer-links h2,
+.footer-newsletter h2,
 .cta h2 {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
@@ -116,6 +124,35 @@ select {
 ::placeholder {
     color: var(--text-muted);
     opacity: 0.75;
+}
+
+/* ---------- AKSESIBILITAS UMUM ---------- */
+
+/* Hanya untuk pembaca layar, tetap bisa difokus */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Cincin fokus keyboard yang konsisten di tema terang & gelap */
+:focus-visible {
+    outline: 3px solid var(--cocoa);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* Elemen yang dinonaktifkan (mis. saat submit diproses) */
+[aria-busy="true"],
+[disabled] {
+    cursor: not-allowed;
 }
 
 /* ---------- CONTAINER ---------- */
@@ -411,7 +448,7 @@ header {
     margin-bottom: 8px;
 }
 
-.pet-card h3 {
+.pet-card .pet-name {
     font-size: 1.2rem;
     margin-bottom: 2px;
 }
@@ -575,7 +612,8 @@ footer .logo-icon {
     font-size: 1.5rem;
 }
 
-.footer-social a {
+.footer-social a,
+.footer-social .footer-link-pending {
     color: var(--footer-muted);
     text-decoration: none;
     transition: color var(--transition);
@@ -585,7 +623,8 @@ footer .logo-icon {
     color: var(--footer-text);
 }
 
-.footer-links h4 {
+.footer-links h2,
+.footer-newsletter h2 {
     font-weight: 600;
     font-size: 1.05rem;
     color: var(--footer-text);
@@ -600,7 +639,8 @@ footer .logo-icon {
     margin-bottom: 10px;
 }
 
-.footer-links ul a {
+.footer-links ul a,
+.footer-links ul .footer-link-pending {
     color: var(--footer-muted);
     text-decoration: none;
     font-size: 0.95rem;
@@ -742,6 +782,26 @@ footer .logo-icon {
     .pets-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
+    /* Kartu kontak & form tidak lagi dua kolom di layar sempit
+       (sebelumnya memakai grid inline yang tidak punya breakpoint) */
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    .section-header h1 {
+        font-size: 1.9rem;
+    }
+    .form-card {
+        padding: 24px 20px;
+    }
+    .form-actions .btn-secondary {
+        flex: 1 1 auto;
+    }
+    .search-bar {
+        padding: 6px 6px 6px 16px;
+    }
+    .search-bar .btn {
+        padding: 10px 20px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -758,10 +818,473 @@ footer .logo-icon {
     .testimonial-grid {
         grid-template-columns: 1fr;
     }
+    .pet-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+        gap: 10px;
+    }
+    .pet-option-card {
+        padding: 12px 6px;
+    }
+    .pet-option-card .pet-emoji {
+        font-size: 2.2rem;
+    }
+    .pet-option-card .pet-name {
+        font-size: 0.92rem;
+    }
+    .form-actions {
+        gap: 12px;
+    }
+    .other-fields {
+        padding: 14px;
+    }
+    /* Toast menempel ke tepi layar */
+    .toast-container {
+        right: 16px;
+        left: 16px;
+        max-width: unset;
+        bottom: 16px;
+    }
+    .toast {
+        padding: 14px 16px;
+    }
+    /* Jaga agar logo + tombol tema tidak bertabrakan dengan hamburger */
+    .header-left {
+        gap: 10px;
+    }
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+    }
+    .theme-icon {
+        width: 17px;
+        height: 17px;
+    }
+    .logo-text {
+        font-size: 1.35rem;
+    }
+    .logo-icon {
+        font-size: 1.5rem;
+    }
 }
 
-/* ---------- PET SELECTION CARDS ---------- */
+/* ============================================
+   FORMULIR, STATE, & FEEDBACK
+   Memindahkan gaya inline ke sini agar konsisten
+   dan mudah ditangani di kedua tema.
+   ============================================ */
+
+/* ---------- Padding halaman ---------- */
+.page-pad {
+    padding: 40px 0 60px;
+}
+
+.page-pad-sm {
+    padding: 40px 0 20px;
+}
+
+.section-header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.form-narrow {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* ---------- Kartu formulir ---------- */
+.form-card {
+    background: var(--white);
+    padding: 32px 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--beige);
+}
+
+.form-field {
+    margin-bottom: 20px;
+    min-width: 0;
+}
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 6px;
+}
+
+.form-required {
+    color: var(--danger);
+    margin-left: 2px;
+}
+
+.form-optional {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ---------- Kontrol input ---------- */
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--warm-gray);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--cream-light);
+    color: var(--text-dark);
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 96px;
+}
+
+.form-control:hover {
+    border-color: var(--cocoa-light);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--cocoa);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Error */
+.form-control[aria-invalid="true"] {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.form-control[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.form-control:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* ---------- Pesan helper & error ---------- */
+.form-hint {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.form-error {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--danger);
+}
+
+.form-error[hidden],
+.form-hint[hidden],
+[hidden] {
+    display: none !important;
+}
+
+/* ---------- Status submit ---------- */
+.form-status {
+    margin-top: 16px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    padding-left: 12px;
+    border-left: 3px solid transparent;
+}
+
+.form-status.is-error {
+    color: var(--danger);
+    border-left-color: var(--danger);
+}
+
+.form-status.is-success {
+    color: var(--success);
+    border-left-color: var(--success);
+}
+
+.form-status.is-info {
+    color: var(--text-muted);
+    border-left-color: var(--warm-gray);
+}
+
+/* ---------- Pemberitahuan mode demo ---------- */
+.demo-notice {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--soft-peach);
+    border: 1px solid var(--cocoa-light);
+    color: var(--text-dark);
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.demo-notice > span:first-child {
+    flex-shrink: 0;
+    line-height: 1.4;
+}
+
+/* ---------- Kolom ekstra "Lainnya" ---------- */
+.other-fields {
+    background: var(--beige);
+    border: 1px dashed var(--warm-gray);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.other-fields-title {
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    margin-bottom: 14px;
+    color: var(--text-dark);
+}
+
+.other-fields .form-field {
+    margin-bottom: 14px;
+}
+
+.other-fields .form-field:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- Tombol aksi form ---------- */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.form-actions .btn {
+    flex: 1 1 auto;
+}
+
+.form-actions .btn-secondary {
+    flex: 0 1 140px;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ---------- Kartu informasi kontak ---------- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.info-card {
+    background: var(--white);
+    padding: 28px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--beige);
+}
+
+.info-card-title {
+    font-size: 1.1rem;
+    margin: 0 0 6px;
+}
+
+.info-card-title + .info-card-text {
+    margin-bottom: 20px;
+}
+
+.info-card-text {
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Pencarian ---------- */
+.search-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--white);
+    padding: 8px 8px 8px 20px;
+    border-radius: 60px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--beige);
+}
+
+.search-bar input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 10px 0;
+}
+
+.search-bar input:focus {
+    outline: none;
+}
+
+.search-bar input:focus-visible {
+    outline: 3px solid var(--cocoa);
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
+.search-bar .btn {
+    padding: 10px 28px;
+    border-radius: 40px;
+    flex-shrink: 0;
+}
+
+.search-filters {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filters .btn {
+    padding: 6px 18px;
+    font-size: 0.85rem;
+}
+
+.search-filters .btn[aria-pressed="true"] {
+    background: var(--cocoa);
+    color: var(--white);
+    border-color: var(--cocoa);
+}
+
+/* ---------- Empty state ---------- */
+.pets-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-muted);
+    padding: 30px 0;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+}
+
+.no-results > span {
+    font-size: 3rem;
+    display: block;
+    line-height: 1.2;
+}
+
+.no-results p {
+    font-size: 1.2rem;
+    margin-top: 6px;
+}
+
+/* ---------- Placeholder tautan footer ----------
+   Halaman beranda belum dibuat, jadi item ini sengaja dirender
+   sebagai <span>, bukan tautan sungguhan: tidak bisa difokus dan
+   tidak diumumkan sebagai link oleh screen reader. Tulisan
+   "(segera hadir)" hanya dibaca pembaca layar.
+   ------------------------------------------------------------------ */
+.footer-links ul .footer-link-pending,
+.footer-social .footer-link-pending {
+    cursor: default;
+}
+
+.footer-demo-note {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--footer-dim);
+    margin: -8px 0 14px;
+}
+
+.footer-form-status {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    font-weight: 600;
+    margin-top: 10px;
+    color: var(--footer-dim);
+}
+
+.footer-form-status.is-error {
+    color: #f0a094;
+}
+
+.footer-form-status.is-success {
+    color: #86c9a1;
+}
+
+.footer-form-status.is-info {
+    color: var(--footer-muted);
+}
+
+[data-theme="dark"] .footer-form-status.is-error {
+    color: #f2988b;
+}
+
+/* ---------- PILIHAN HEWAN (radio + label) ----------
+   Struktur: .pet-option > input[type=radio].pet-option-input + label.pet-option-card
+   Radio disembunyikan secara visual tetapi tetap bisa difokus & dioperasikan
+   keyboard, dan status tercentang ditata lewat :checked + .pet-option-card.
+   ------------------------------------------------------------------ */
+.pet-picker {
+    border: 0;
+    padding: 0;
+    margin: 0 0 20px;
+    min-width: 0;
+}
+
+.pet-picker legend.form-label {
+    padding: 0;
+}
+
+.pet-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+}
+
+.pet-option {
+    position: relative;
+    display: flex;
+}
+
+.pet-option-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+}
+
 .pet-option-card {
+    position: relative;
+    display: block;
+    width: 100%;
     background: var(--white);
     border: 2px solid var(--beige);
     border-radius: var(--radius-sm);
@@ -775,12 +1298,20 @@ footer .logo-icon {
 .pet-option-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
+    border-color: var(--cocoa-light);
 }
 
-.pet-option-card.selected {
+/* Status terpilih */
+.pet-option-input:checked + .pet-option-card {
     border-color: var(--cocoa);
     background: var(--cream-light);
-    box-shadow: 0 0 0 3px rgba(139, 111, 92, 0.15);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Fokus keyboard pada kartu pilihan */
+.pet-option-input:focus-visible + .pet-option-card {
+    outline: 3px solid var(--cocoa);
+    outline-offset: 2px;
 }
 
 .pet-option-card .pet-emoji {
@@ -790,6 +1321,7 @@ footer .logo-icon {
 }
 
 .pet-option-card .pet-name {
+    display: block;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
@@ -797,8 +1329,34 @@ footer .logo-icon {
 }
 
 .pet-option-card .pet-type-label {
+    display: block;
     font-size: 0.8rem;
     color: var(--text-muted);
+}
+
+/* Lencana centang pada kartu terpilih */
+.pet-check {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--cocoa);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+.pet-option-input:checked + .pet-option-card .pet-check {
+    opacity: 1;
+    transform: scale(1);
 }
 
 /* ---------- TOAST NOTIFICATION ---------- */
@@ -886,18 +1444,6 @@ footer .logo-icon {
 @keyframes slideDown {
     0% { opacity: 1; transform: translateY(0) scale(1); }
     100% { opacity: 0; transform: translateY(30px) scale(0.96); }
-}
-
-@media (max-width: 480px) {
-    .toast-container {
-        right: 16px;
-        left: 16px;
-        max-width: unset;
-        bottom: 16px;
-    }
-    .toast {
-        padding: 14px 16px;
-    }
 }
 
 /* ============================================
@@ -1013,6 +1559,13 @@ footer .logo-icon {
     --footer-line: #2b221c;
     --footer-input: #241d18;
     --footer-input-focus: #2f2621;
+
+    /* state validasi: disetel lebih terang agar kontras di latar gelap */
+    --danger: #f2988b;
+    --danger-soft: rgba(242, 152, 139, 0.14);
+    --success: #86c9a1;
+    --success-soft: rgba(134, 201, 161, 0.14);
+    --focus-ring: rgba(220, 191, 166, 0.45);
 }
 
 /* Hero sedikit lebih gelap agar tidak menyilaukan */
@@ -1041,24 +1594,8 @@ html.theme-transition *::after {
     }
 }
 
-/* ---------- 4. PENYESUAIAN LAYAR KECIL ---------- */
-/* Jaga agar logo + tombol tema tidak bertabrakan dengan hamburger */
-@media (max-width: 480px) {
-    .header-left {
-        gap: 10px;
-    }
-    .theme-toggle {
-        width: 38px;
-        height: 38px;
-    }
-    .theme-icon {
-        width: 17px;
-        height: 17px;
-    }
-    .logo-text {
-        font-size: 1.35rem;
-    }
-    .logo-icon {
-        font-size: 1.5rem;
-    }
-}
+/* ---------- CATATAN LAYAR KECIL ----------
+   Penyesuaian 480px untuk logo + tombol tema diletakkan di blok
+   @media (max-width: 480px) pada seksi RESPONSIVE di atas file ini,
+   supaya semua aturan layar kecil berada dalam satu blok.
+   ------------------------------------------------------------------ */
