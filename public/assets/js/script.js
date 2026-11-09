@@ -1,29 +1,23 @@
 /* ==========================================================
-   PawPals · js/script.js
+   PawPals · assets/js/script.js
    Vanilla JavaScript, tanpa dependency.
 
    Catatan penting
    ---------------
-   Project ini 100% frontend. Tidak ada backend, API, atau
-   database. Setiap formulir hanya MEMVALIDASI isian di browser
-   dan sengaja tidak mengirim maupun menyimpan data pribadi.
-   Lihat fungsi submitAdoptionRequest() / submitContactMessage()
-   / submitNewsletter() sebagai titik integrasi backend.
+   Data hewan disuntikkan oleh PHP sebagai window.PAWPALS_DATA
+   (lihat resources/views/layout.php). File ini hanya merender
+   dan menangani interaksi — bukan sumber data.
+
+   Setiap formulir masih MEMVALIDASI isian di browser dan sengaja
+   tidak mengirim maupun menyimpan data pribadi. Lihat fungsi
+   submitAdoptionRequest() / submitContactMessage() /
+   submitNewsletter() sebagai titik integrasi backend.
    ========================================================== */
 
 // ==========================================
 // 1. DATA HEWAN
 // ==========================================
-const pets = [
-    { id: 1, name: 'Milo', type: 'anjing', age: '2 tahun', gender: 'Jantan', description: 'Milo adalah anjing yang ramah dan suka bermain. Cocok untuk keluarga aktif.', image: '🐕', featured: true },
-    { id: 2, name: 'Luna', type: 'kucing', age: '1 tahun', gender: 'Betina', description: 'Luna manja dan suka dipeluk. Sangat cocok untuk rumah yang tenang.', image: '🐈', featured: true },
-    { id: 3, name: 'Coco', type: 'kelinci', age: '6 bulan', gender: 'Betina', description: 'Coco lucu dan energik. Suka makan wortel dan bermain di rumput.', image: '🐇', featured: true },
-    { id: 4, name: 'Bella', type: 'anjing', age: '3 tahun', gender: 'Betina', description: 'Bella setia dan protektif. Sangat cocok untuk keluarga dengan anak.', image: '🐕', featured: true },
-    { id: 5, name: 'Max', type: 'kucing', age: '4 tahun', gender: 'Jantan', description: 'Max adalah kucing yang kalem dan mandiri. Suka tidur di tempat tinggi.', image: '🐈', featured: false },
-    { id: 6, name: 'Chloe', type: 'hamster', age: '8 bulan', gender: 'Betina', description: 'Chloe mungil dan lincah. Sangat mudah dirawat, cocok untuk pemula.', image: '🐹', featured: false },
-    { id: 7, name: 'Charlie', type: 'burung', age: '1,5 tahun', gender: 'Jantan', description: 'Charlie pandai meniru suara dan sangat sosial. Suka berinteraksi dengan manusia.', image: '🐦', featured: false },
-    { id: 8, name: 'Lucky', type: 'anjing', age: '5 tahun', gender: 'Jantan', description: 'Lucky adalah anjing senior yang tenang dan penyayang. Suka tidur di pangkuan.', image: '🐕', featured: false }
-];
+const pets = window.PAWPALS_DATA.pets;
 
 const OTHER_PET_VALUE = 'other';
 
@@ -296,7 +290,7 @@ function renderPets(petList, containerId) {
 
         const cta = document.createElement('a');
         cta.className = 'btn btn-primary';
-        cta.href = 'adopt.html?pet=' + encodeURIComponent(pet.id);
+        cta.href = 'adopt.php?pet=' + encodeURIComponent(pet.id);
         cta.textContent = 'Adopsi';
         cta.setAttribute('aria-label', 'Ajukan adopsi untuk ' + pet.name);
 

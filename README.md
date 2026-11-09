@@ -1,11 +1,16 @@
 # PawPals
 
-**PawPals** adalah website statis untuk menemukan dan mengajukan adopsi hewan —
+**PawPals** adalah website untuk menemukan dan mengajukan adopsi hewan —
 anjing, kucing, kelinci, hamster, dan burung — yang membutuhkan rumah.
 
 PawPals menghubungkan hewan-hewan yang membutuhkan rumah dengan orang-orang yang
 penuh kasih. Setiap halaman berisi katalog hewan, pencarian, form adopsi, dan
 halaman kontak.
+
+Project ini berjalan di atas **Native PHP tanpa framework dan tanpa dependency**.
+PHP dipakai untuk templating (header/footer/layout bersama) dan sebagai sumber
+data hewan. Seluruh interaksi (pencarian, filter, validasi form, night mode)
+tetap berjalan di browser dengan Vanilla JavaScript.
 
 ---
 
@@ -22,7 +27,7 @@ halaman kontak.
 
 | Fitur | Keterangan |
 |---|---|
-| Katalog hewan | 8 hewan sebagai data statis; 4 ditandai sebagai *featured* dan tampil di beranda |
+| Katalog hewan | 8 hewan dari `app/Data/PetRepository.php`; 4 ditandai *featured* dan tampil di beranda |
 | Pencarian & filter | Pencarian multi-field (nama, jenis, usia, gender, deskripsi) + filter cepat per jenis |
 | Form adopsi | Validasi nama, email, telepon, dan pilihan hewan; alur khusus opsi "Lainnya" |
 | Form kontak | Validasi nama, email, dan pesan |
@@ -36,13 +41,14 @@ halaman kontak.
 
 ## Teknologi
 
-Tanpa framework dan tanpa proses build:
-
+- **PHP >= 8.2** — templating & sumber data. Tanpa framework, tanpa package Composer.
 - **HTML5**
 - **CSS3** — custom properties, `grid`/`flex`, `prefers-color-scheme`, `prefers-reduced-motion`
-- **Vanilla JavaScript (ES2020)** — tanpa library, tanpa dependency
+- **Vanilla JavaScript (ES2020)** — tanpa library, tanpa proses build
 
-> **Backend: belum ada.** Tidak ada server, API, atau database. Seluruh data hewan di-hardcode di `js/script.js`, dan seluruh formulir hanya memvalidasi di browser. Lihat bagian *Status formulir* di bawah.
+> **Backend: belum ada.** Tidak ada server-side processing untuk form, tidak ada
+> API, tidak ada database. Seluruh formulir hanya memvalidasi di browser.
+> Lihat bagian *Status formulir* di bawah.
 
 ---
 
@@ -50,56 +56,78 @@ Tanpa framework dan tanpa proses build:
 
 ```
 Web-Projek/
-├── index.html      # Beranda  — hero, statistik, hewan unggulan, testimoni, CTA
-├── about.html      # Tentang  — misi, profil, nilai
-├── pets.html       # Hewan    — daftar semua hewan
-├── search.html     # Cari     — pencarian + filter jenis
-├── adopt.html      # Adopsi   — formulir adopsi + pemilih hewan
-├── contact.html    # Kontak   — informasi kontak + formulir pesan
-├── css/
-│   └── style.css   # Seluruh gaya (ditempel satu file)
-├── js/
-│   └── script.js   # Seluruh logika (ditempel satu file)
+├── public/                        # DOCROOT — satu-satunya direktori yang terekspos web
+│   ├── index.php                  # Beranda
+│   ├── about.php                  # Tentang
+│   ├── pets.php                   # Hewan
+│   ├── search.php                 # Cari
+│   ├── adopt.php                  # Adopsi
+│   ├── contact.php                # Kontak
+│   └── assets/
+│       ├── css/style.css          # Seluruh gaya (satu file)
+│       └── js/
+│           ├── script.js          # Seluruh logika interaksi (satu file)
+│           └── theme-boot.js      # Skrip anti-kilat (FOUC) untuk Night Mode
+├── resources/views/
+│   ├── layout.php                 # Skeleton bersama: head + header + isi + footer
+│   ├── partials/
+│   │   ├── header.php             # Header + navigasi (active state otomatis)
+│   │   └── footer.php             # Footer bersama
+│   └── pages/                     # Isi <main> tiap halaman
+│       ├── home.php  about.php  pets.php
+│       └── search.php  adopt.php  contact.php
+├── app/
+│   ├── bootstrap.php              # Autoloader PSR-4 + timezone + helper e()
+│   ├── Data/PetRepository.php     # Sumber kebenaran tunggal data hewan
+│   └── Support/View.php           # Renderer template minimal
+├── config/site.php                # Nama situs, nav, kontak, statistik, testimoni, footer
+├── composer.json                  # Hanya autoload PSR-4, tanpa dependency
 └── README.md
 ```
 
-Pola yang dipakai: satu halaman statis per topik, satu stylesheet bersama, satu
-script bersama yang memeriksa elemen yang ada sebelum memasang listener — sehingga
-`script.js` aman dipakai di keenam halaman tanpa error.
+`app/`, `config/`, dan `resources/` berada **di luar** docroot, sehingga tidak
+dapat diakses melalui URL.
+
+---
+
+## Alur data
+
+`PetRepository` adalah satu-satunya sumber data hewan. Saat halaman dirender,
+`layout.php` menyuntikkannya ke browser:
+
+```html
+<script>window.PAWPALS_DATA = {"pets": [ ... ]};</script>
+```
+
+`assets/js/script.js` membaca `window.PAWPALS_DATA.pets` dan merender kartu,
+pencarian, filter, serta pemilih hewan dari sana. Menambah atau mengubah hewan
+cukup dilakukan di `PetRepository` — beranda, daftar hewan, pencarian, filter,
+dan form adopsi ikut berubah otomatis.
+
+Injeksi memakai `json_encode()` dengan flag `JSON_HEX_TAG` dkk. sehingga isi
+data tidak bisa keluar dari konteks `<script>`.
 
 ---
 
 ## Menjalankan secara lokal
 
-### Opsi 1 — buka langsung (paling cepat)
+Wajib memakai server karena halaman kini berupa PHP.
 
-Project ini statis sepenuhnya, jadi **tidak wajib** memakai server. Cukup buka
-`index.html` dengan browser:
-
-- **Windows**: klik dua kali `index.html`, atau jalankan `start index.html`
-- **macOS/Linux**: `open index.html` / `xdg-open index.html`
-
-> ⚠️ Membuka lewat `file://` membuat `localStorage` dan `matchMedia` tetap berjalan di
-> browser modern, tetapi sebagian browser memblokir penyimpanan pada skema `file://`.
-> Jika Night Mode tidak bertahan saat halaman dimuat ulang, gunakan Opsi 2.
-
-### Opsi 2 — local development server (disarankan)
-
-**Python 3** (bawaan di Windows/macOS/Linux):
+**PHP built-in server** (paling cepat, tanpa konfigurasi):
 
 ```bash
 cd Web-Projek
-python -m http.server 8000
+php -S localhost:8000 -t public
 ```
 
 Lalu buka <http://localhost:8000>.
 
-Alternatif tanpa Python — **Node.js**:
+**Laragon / Apache / Nginx:** arahkan document root vhost ke direktori
+`public/` milik project ini.
 
-```bash
-cd Web-Projek
-npx serve .
-```
+> Catatan: pada `php -S`, URL yang tidak dikenali akan dirender sebagai halaman
+> beranda (perilaku fallback bawaan PHP development server ke `index.php`).
+> Pada Apache/Nginx URL seperti itu akan menghasilkan 404 seperti biasa.
 
 ---
 
@@ -107,15 +135,15 @@ npx serve .
 
 | File | Judul | Isi |
 |---|---|---|
-| `index.html` | PawPals · Beranda | Hero, statistik, 4 hewan unggulan, 3 testimoni, CTA |
-| `about.html` | PawPals · Tentang | Misi PawPals, profil, 3 nilai |
-| `pets.html` | PawPals · Hewan | Grid seluruh hewan |
-| `search.html` | PawPals · Cari Hewan | Kolom pencarian + 6 filter jenis |
-| `adopt.html` | PawPals · Adopsi | Formulir adopsi + 9 pilihan hewan |
-| `contact.html` | PawPals · Hubungi Kami | Kontak + formulir pesan |
+| `public/index.php` | PawPals · Beranda | Hero, statistik, 4 hewan unggulan, 3 testimoni, CTA |
+| `public/about.php` | PawPals · Tentang | Misi PawPals, profil, 3 nilai |
+| `public/pets.php` | PawPals · Hewan | Grid seluruh hewan |
+| `public/search.php` | PawPals · Cari Hewan | Kolom pencarian + 6 filter jenis |
+| `public/adopt.php` | PawPals · Adopsi | Formulir adopsi + 9 pilihan hewan |
+| `public/contact.php` | PawPals · Hubungi Kami | Kontak + formulir pesan |
 
 Semua halaman saling terhubung lewat menu header dan footer. Halaman kontak
-(`contact.html`) dapat diakses dari link **"Hubungi Kami"** di footer setiap halaman.
+dapat diakses dari link **"Hubungi Kami"** di footer setiap halaman.
 
 ---
 
@@ -138,51 +166,80 @@ Hal-hal yang **sengaja tidak** dilakukan:
 
 Fungsi berikut adalah **titik integrasi** untuk backend di masa depan. Ganti
 isi masing-masing fungsi dengan pemanggilan `fetch()` menuju endpoint Anda —
-alur validasi, status, dan anti-duplikasi submit di `js/script.js` **tidak
-perlu ditulis ulang**:
+alur validasi, status, dan anti-duplikasi submit di `assets/js/script.js`
+**tidak perlu ditulis ulang**:
 
 - `submitAdoptionRequest(payload)` → `delivered: false`
 - `submitContactMessage(payload)` → `delivered: false`
 - `submitNewsletter(email)` → `delivered: false`
 
 Selama `delivered` bernilai `false`, antarmuka menampilkan jalur mode demo.
-Selain itu, tidak ada integrasi layanan pihak ketiga, analytics, atau tracking.
+
+---
+
+## Catatan konfigurasi
+
+- **Timezone** diset dari `config/site.php` (`Asia/Jakarta`) lewat
+  `app/bootstrap.php`, bukan lewat `php.ini`. Tahun copyright di footer
+  mengikuti `date('Y')`.
+- **Statistik hero** (`150+`, `45`, `98%`) dan **testimoni** berada di
+  `config/site.php` sebagai konten statis. Nilai `45 Hewan tersedia` adalah
+  angka mock yang tidak sama dengan jumlah hewan di `PetRepository` (8) —
+  dipertahankan apa adanya dari versi sebelumnya dan menunggu diganti dengan
+  angka nyata saat backend tersedia.
+
+---
+
+## Migrasi ke Laravel di masa depan
+
+Struktur sengaja mengikuti konvensi Laravel agar migrasi berarti memindahkan
+isi, bukan membongkar layout:
+
+| Sekarang | Nanti di Laravel |
+|---|---|
+| `public/` | `public/` (docroot, tetap) |
+| `resources/views/*.php` + `layout.php` | Blade views + layout |
+| `app/Data/PetRepository.php` | Eloquent model + repository |
+| `app/Support/View.php` | tidak diperlukan (Blade) |
+| `config/site.php` | file di `config/` |
+| `app/bootstrap.php` | bootstrap bawaan framework |
+| `composer.json` (autoload PSR-4) | sudah sesuai, tinggal tambah `laravel/framework` |
 
 ---
 
 ## Pengujian dasar
 
-Tidak ada test runner yang perlu dipasang. Pemeriksaan berikut sudah cukup untuk memverifikasi hasil perubahan.
+Tidak ada test runner yang perlu dipasang. Pemeriksaan berikut sudah cukup
+untuk memverifikasi hasil perubahan.
 
-### 1. Referensi berkas & tautan
+### 1. Sintaks
 
 ```bash
-# Pastikan tidak ada referensi ke nama file lama (kecuali di README ini sendiri)
-grep -rn "contach" --include="*.html" --include="*.css" --include="*.js" .
-# hasil yang diharapkan: tidak ada baris
+# PHP
+find . -name "*.php" -exec php -l {} \;
 
-# Pastikan contact.html ada dan tertaut dari setiap halaman
-ls contact.html
-grep -c 'href="contact.html"' *.html
-# hasil yang diharapkan: 1 untuk keenam file HTML
+# JavaScript
+node --check public/assets/js/script.js
+node --check public/assets/js/theme-boot.js
 ```
 
-### 2. Sintaks JavaScript
+### 2. Tidak ada referensi file lama
 
 ```bash
-node --check js/script.js
+grep -rn "\.html" --include="*.php" --include="*.js" --include="*.css" .
+# hasil yang diharapkan: tidak ada baris (kecuali properti htmlFor di JS)
 ```
 
 ### 3. Pemeriksaan manual di browser
 
-Jalankan server lokal (Opsi 2), lalu periksa:
+Jalankan `php -S localhost:8000 -t public`, lalu periksa:
 
 **Navigasi & tautan**
 - [ ] Semua menu header berpindah halaman dengan benar di keenam halaman.
-- [ ] Link "Hubungi Kami" di footer membuka `contact.html` (bukan 404).
-- [ ] Tidak ada halaman yang menampilkan error 404 saat klik link.
+- [ ] Link "Hubungi Kami" di footer membuka `contact.php` (bukan 404).
+- [ ] Tombol "Adopsi" pada kartu hewan membuka `adopt.php?pet=ID` dengan hewan tercentang.
 
-**Pencarian (`search.html`)**
+**Pencarian (`search.php`)**
 - [ ] Mengetik `luna` → 1 hasil.
 - [ ] Mengetik `anjing` → 3 hasil.
 - [ ] Mengetik `zzzz` → panel "Tidak ada hewan yang ditemukan".
@@ -195,10 +252,10 @@ Jalankan server lokal (Opsi 2), lalu periksa:
 - [ ] Klik tombol di sebelah logo → tema berubah ke gelap, ikon berubah jadi bulan.
 - [ ] Muat ulang halaman → tema gelap tetap (tersimpan di `localStorage`).
 - [ ] Buka halaman lain → tema tetap sama.
-- [ ] Tekan `Esc` / klik menu → tidak ada error di konsol.
+- [ ] Tidak ada kilatan tema salah saat halaman dimuat (anti-FOUC bekerja).
 - [ ] Cincin fokus tombol terlihat di tema terang **dan** gelap.
 
-**Formulir adopsi (`adopt.html`)**
+**Formulir adopsi (`adopt.php`)**
 - [ ] Submit dengan semua field kosong → muncul pesan error, **tidak ada** notifikasi sukses.
 - [ ] Isi email `bukan-email` → error format email.
 - [ ] Isi telepon `123` → error "terlalu pendek".
@@ -212,7 +269,7 @@ Jalankan server lokal (Opsi 2), lalu periksa:
 - [ ] Klik **Reset** → form kosong, pilihan hewan tidak tercentang, kolom Lainnya tersembunyi.
 - [ ] Tekan submit berkali-kali cepat → tidak ada toast bertumpuk.
 
-**Formulir kontak (`contact.html`) & newsletter**
+**Formulir kontak (`contact.php`) & newsletter**
 - [ ] Submit kontak kosong → error, tidak ada klaim terkirim.
 - [ ] Submit kontak valid → pesan mode demo, isi pesan tetap.
 - [ ] Newsletter dengan `bukan-email` → error.
@@ -221,6 +278,7 @@ Jalankan server lokal (Opsi 2), lalu periksa:
 
 **Tata letak**
 - [ ] Di lebar ±360px tidak ada scroll horizontal di keenam halaman.
+- [ ] Halaman Tentang (`about.php`) menjadi satu kolom di layar sempit.
 - [ ] Kartu pilihan hewan tetap nyaman disentuh di layar kecil.
 - [ ] Menu hamburger membuka/menutup di layar kecil.
 
